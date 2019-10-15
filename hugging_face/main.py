@@ -33,8 +33,11 @@ dataset = datasets.MNIST(root, train=train, transform=transform, download=True)
 sampler = DistributedSampler(dataset)
 
 dataloader = DataLoader(dataset, sampler=sampler)
+
+print('Starting training')
 for inputs, labels in dataloader:
     predictions = distrib_model(inputs.to(device))         # Forward pass
     loss = loss_function(predictions, labels.to(device))   # Compute loss function
     loss.backward()                                        # Backward pass
     optimizer.step()                                       # Optimizer step
+    print('.', end='')
