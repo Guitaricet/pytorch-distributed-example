@@ -1,3 +1,6 @@
+import argparse
+
+import torch
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import DataLoader
 
@@ -12,7 +15,9 @@ args = parser.parse_args()
 torch.distributed.init_process_group(backend='nccl')
 
 # Encapsulate the model on the GPU assigned to the current process
-device = torch.device('cuda', arg.local_rank)
+device = torch.device('cuda', args.local_rank)
+
+model = torch.nn.Linear(784, 10)
 model = model.to(device)
 distrib_model = torch.nn.parallel.DistributedDataParallel(model,
                                                           device_ids=[args.local_rank],
